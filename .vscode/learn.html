@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution Quest - Learn</title>
+    <style>
+        /* Main Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #000080, #1a237e);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #138808, #4caf50);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* Levels Section */
+        .levels-container {
+            margin-bottom: 2rem;
+        }
+        
+        .level-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .level-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .level-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .level-2 .level-icon { background: #f39c12; }
+        .level-3 .level-icon { background: #2ecc71; }
+        .level-4 .level-icon { background: #9b59b6; }
+        .level-5 .level-icon { background: #e74c3c; }
+        
+        .level-content {
+            flex-grow: 1;
+        }
+        
+        .level-card h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .level-card p {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .locked {
+            opacity: 0.7;
+            position: relative;
+        }
+        
+        .locked::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+        
+        .lock-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: #e74c3c;
+            font-size: 2rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: #138808;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #0e6e0a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: #3498db;
+        }
+        
+        .btn-secondary:hover {
+            background: #2980b9;
+        }
+        
+        /* Badges Section */
+        .badges-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .badge {
+            width: 80px;
+            height: 80px;
+            background: #f1f1f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .badge.locked {
+            filter: grayscale(100%);
+        }
+        
+        .badge-icon {
+            font-size: 2rem;
+            color: #f39c12;
+        }
+        
+        .badge.locked .badge-icon {
+            color: #bdc3c7;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #7f8c8d;
+            margin-top: 2rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .quiz-question {
+            margin-bottom: 1.5rem;
+        }
+        
+        .quiz-options {
+            margin-bottom: 1.5rem;
+        }
+        
+        .quiz-option {
+            display: block;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: #f1f1f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-option:hover {
+            background: #e0e0e0;
+        }
+        
+        .quiz-option.selected {
+            background: #3498db;
+            color: white;
+        }
+        
+        .quiz-feedback {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .quiz-feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .quiz-feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>Constitution Quest</h1>
+            <p>Master India's Constitution through interactive challenges</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <h2>Your Learning Journey</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span id="progressText">0% Complete</span>
+                <span id="levelStatus">Level 1/5</span>
+            </div>
+        </section>
+        
+        <!-- Levels Section -->
+        <section class="levels-container">
+            <h2>Constitution Challenges</h2>
+            
+            <!-- Level 1 -->
+            <div class="level-card level-1" id="level1">
+                <div class="level-icon">1</div>
+                <div class="level-content">
+                    <h3>Constitution Basics</h3>
+                    <p>Learn about the framing, adoption, and key features of India's Constitution</p>
+                    <button class="btn" onclick="startQuiz(1)">Start Challenge</button>
+                    <span style="color: #3498db; margin-left: 1rem;"><i class="fas fa-check"></i> Available</span>
+                </div>
+            </div>
+            
+            <!-- Level 2 -->
+            <div class="level-card level-2 locked" id="level2">
+                <div class="level-icon">2</div>
+                <div class="level-content">
+                    <h3>Preamble & Fundamental Rights</h3>
+                    <p>Understand the guiding principles and rights guaranteed to citizens</p>
+                    <button class="btn" disabled>Start Challenge</button>
+                    <span style="color: #f39c12; margin-left: 1rem;">Complete Level 1 to unlock</span>
+                </div>
+                <div class="lock-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            
+            <!-- Level 3 -->
+            <div class="level-card level-3 locked" id="level3">
+                <div class="level-icon">3</div>
+                <div class="level-content">
+                    <h3>Directive Principles & Duties</h3>
+                    <p>Explore the state's goals and citizens' responsibilities</p>
+                    <button class="btn" disabled>Start Challenge</button>
+                    <span style="color: #2ecc71; margin-left: 1rem;">Complete Level 2 to unlock</span>
+                </div>
+                <div class="lock-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            
+            <!-- Level 4 -->
+            <div class="level-card level-4 locked" id="level4">
+                <div class="level-icon">4</div>
+                <div class="level-content">
+                    <h3>Government Structure</h3>
+                    <p>Learn about the executive, legislature, and judiciary systems</p>
+                    <button class="btn" disabled>Start Challenge</button>
+                    <span style="color: #9b59b6; margin-left: 1rem;">Complete Level 3 to unlock</span>
+                </div>
+                <div class="lock-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            
+            <!-- Level 5 -->
+            <div class="level-card level-5 locked" id="level5">
+                <div class="level-icon">5</div>
+                <div class="level-content">
+                    <h3>Amendments & Special Features</h3>
+                    <p>Discover how the constitution evolves and its unique aspects</p>
+                    <button class="btn" disabled>Start Challenge</button>
+                    <span style="color: #e74c3c; margin-left: 1rem;">Complete Level 4 to unlock</span>
+                </div>
+                <div class="lock-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Badges Section -->
+        <section class="badges-section">
+            <h2>Your Achievements</h2>
+            <p>Earn badges by completing challenges and mastering concepts</p>
+            
+            <div class="badges-container">
+                <div class="badge locked" id="badge1">
+                    <i class="fas fa-book badge-icon"></i>
+                </div>
+                <div class="badge locked" id="badge2">
+                    <i class="fas fa-balance-scale badge-icon"></i>
+                </div>
+                <div class="badge locked" id="badge3">
+                    <i class="fas fa-gavel badge-icon"></i>
+                </div>
+                <div class="badge locked" id="badge4">
+                    <i class="fas fa-landmark badge-icon"></i>
+                </div>
+                <div class="badge locked" id="badge5">
+                    <i class="fas fa-star badge-icon"></i>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023 Constitution Quest | An Interactive Learning Experience</p>
+        </div>
+    </footer>
+    
+    <!-- Quiz Modal -->
+    <div class="modal" id="quizModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h2>Level ${level} Challenge</h2>
+                <p>Test your knowledge about ${getLevelTopic(level)}</p>
+            </div>
+            <div class="modal-body" id="quizQuestionsContainer">
+                <!-- Quiz questions will be inserted here by JavaScript -->
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Game State
+        const gameState = {
+            currentLevel: 1,
+            completedLevels: 0,
+            totalLevels: 5,
+            badgesEarned: 0,
+            progress: 0
+        };
+        
+        // Quiz Questions Database
+        const quizQuestions = {
+            1: [
+                {
+                    question: "When was the Constitution of India adopted by the Constituent Assembly?",
+                    options: ["15 August 1947", "26 January 1950", "26 November 1949", "2 October 1948"],
+                    answer: 2,
+                    explanation: "The Constitution was adopted on 26 November 1949 and came into effect on 26 January 1950."
+                },
+                {
+                    question: "Who is regarded as the chief architect of the Indian Constitution?",
+                    options: ["Mahatma Gandhi", "Jawaharlal Nehru", "B.R. Ambedkar", "Sardar Patel"],
+                    answer: 2,
+                    explanation: "Dr. B.R. Ambedkar is widely regarded as the chief architect of the Indian Constitution."
+                },
+                {
+                    question: "How many articles does the Indian Constitution originally have?",
+                    options: ["395", "448", "250", "500"],
+                    answer: 0,
+                    explanation: "The original Constitution had 395 articles in 22 parts and 8 schedules."
+                }
+            ],
+            2: [
+                {
+                    question: "Which part of the Indian Constitution contains the Fundamental Rights?",
+                    options: ["Part I", "Part II", "Part III", "Part IV"],
+                    answer: 2,
+                    explanation: "Part III (Articles 12-35) contains the Fundamental Rights."
+                },
+                {
+                    question: "Which Fundamental Right is called the 'Heart and Soul' of the Constitution by Dr. Ambedkar?",
+                    options: ["Right to Equality", "Right to Freedom", "Right to Constitutional Remedies", "Right Against Exploitation"],
+                    answer: 2,
+                    explanation: "Article 32 (Right to Constitutional Remedies) was called the heart and soul of the Constitution."
+                }
+            ],
+            // More questions can be added for other levels
+        };
+        
+        // Initialize the page
+        function init() {
+            updateProgress();
+        }
+        
+        // Update progress bar and status
+        function updateProgress() {
+            gameState.progress = (gameState.completedLevels / gameState.totalLevels) * 100;
+            document.getElementById('progressBar').style.width = `${gameState.progress}%`;
+            document.getElementById('progressText').textContent = `${Math.round(gameState.progress)}% Complete`;
+            document.getElementById('levelStatus').textContent = `Level ${gameState.currentLevel}/${gameState.totalLevels}`;
+        }
+        
+        // Start a quiz for a specific level
+        function startQuiz(level) {
+    const questions = quizQuestions[level];
+    if (!questions) {
+        alert("Quiz questions for this level are not available yet!");
+        return;
+    }
+    
+    let quizHTML = '';
+    
+    questions.forEach((q, qIndex) => {
+        quizHTML += `
+            <div class="quiz-question" id="question${qIndex}">
+                <h3>Question ${qIndex + 1}: ${q.question}</h3>
+                <div class="quiz-options">
+        `;
+        
+        q.options.forEach((option, oIndex) => {
+            quizHTML += `
+                <div class="quiz-option" onclick="selectOption(${qIndex}, ${oIndex})">
+                    ${option}
+                </div>
+            `;
+        });
+        
+        quizHTML += `
+                </div>
+                <div class="quiz-feedback" id="feedback${qIndex}"></div>
+            </div>
+        `;
+    });
+    
+    document.getElementById('quizQuestionsContainer').innerHTML = quizHTML;
+    document.querySelector('.modal-header h2').textContent = `Level ${level} Challenge`;
+    document.querySelector('.modal-header p').textContent = `Test your knowledge about ${getLevelTopic(level)}`;
+    document.getElementById('quizModal').style.display = "flex";
+}
+        // Get topic for a level
+        function getLevelTopic(level) {
+            const topics = [
+                "Constitution Basics",
+                "Preamble & Fundamental Rights",
+                "Directive Principles & Duties",
+                "Government Structure",
+                "Amendments & Special Features"
+            ];
+            return topics[level - 1] || "the Constitution";
+        }
+        
+        // Select an option in the quiz
+        function selectOption(qIndex, oIndex) {
+            const questionDiv = document.getElementById(`question${qIndex}`);
+            const options = questionDiv.querySelectorAll('.quiz-option');
+            
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[oIndex].classList.add('selected');
+            
+            // Store the selected answer
+            quizQuestions[gameState.currentLevel][qIndex].selected = oIndex;
+        }
+        
+        // Submit the quiz
+        function submitQuiz(level) {
+            const questions = quizQuestions[level];
+            let allAnswered = true;
+            let score = 0;
+            
+            questions.forEach((q, qIndex) => {
+                const feedbackDiv = document.getElementById(`feedback${qIndex}`);
+                
+                if (q.selected === undefined) {
+                    allAnswered = false;
+                    feedbackDiv.textContent = "Please select an answer!";
+                    feedbackDiv.className = "quiz-feedback incorrect";
+                    feedbackDiv.style.display = "block";
+                    return;
+                }
+                
+                if (q.selected === q.answer) {
+                    score++;
+                    feedbackDiv.innerHTML = `<i class="fas fa-check"></i> Correct! ${q.explanation}`;
+                    feedbackDiv.className = "quiz-feedback correct";
+                } else {
+                    feedbackDiv.innerHTML = `<i class="fas fa-times"></i> Incorrect. The correct answer is: ${q.options[q.answer]}. ${q.explanation}`;
+                    feedbackDiv.className = "quiz-feedback incorrect";
+                }
+                feedbackDiv.style.display = "block";
+            });
+            
+            if (!allAnswered) return;
+            
+            // Calculate passing score (at least 60%)
+            const passingScore = Math.ceil(questions.length * 0.6);
+            
+            if (score >= passingScore) {
+                setTimeout(() => {
+                    alert(`Congratulations! You scored ${score}/${questions.length} and passed Level ${level}!`);
+                    completeLevel(level);
+                    closeModal();
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    alert(`You scored ${score}/${questions.length}. Try again to pass Level ${level}!`);
+                }, 1000);
+            }
+        }
+        
+        // Complete a level
+        function completeLevel(level) {
+            if (level === gameState.currentLevel) {
+                gameState.completedLevels++;
+                gameState.currentLevel++;
+                
+                // Unlock next level
+                if (level < gameState.totalLevels) {
+                    const nextLevel = document.getElementById(`level${level + 1}`);
+                    nextLevel.classList.remove('locked');
+                    nextLevel.querySelector('.btn').disabled = false;
+                    nextLevel.querySelector('.lock-icon').style.display = "none";
+                    nextLevel.querySelector('span').innerHTML = '<i class="fas fa-check"></i> Available';
+                    nextLevel.querySelector('span').style.color = getLevelColor(level + 1);
+                }
+                
+                // Earn badge
+                const badge = document.getElementById(`badge${level}`);
+                badge.classList.remove('locked');
+                gameState.badgesEarned++;
+                
+                updateProgress();
+            }
+        }
+        
+        // Get color for a level
+        function getLevelColor(level) {
+            const colors = [
+                "#3498db", // Level 1
+                "#f39c12", // Level 2
+                "#2ecc71", // Level 3
+                "#9b59b6", // Level 4
+                "#e74c3c"  // Level 5
+            ];
+            return colors[level - 1] || "#3498db";
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('quizModal').style.display = "none";
+        }
+        
+        // Initialize the page when loaded
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="icon" href="logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <title>Samvidhan</title>
+    
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="./images/login_logo.png" alt="Samvidhan Logo">
+            <div class="app-name">SAMVIDHAN</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="index1.html">Games</a></li>
+                <li><a href="#about-section">About</a></li>
+                <li><a href="signup.html">Login</a></li>
+                <!-- <li><a href="#">Profile</a></li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Constitution Introduction Section -->
+    <div class="constitution-intro">
+        <div class="constitution-image">
+            <img src="./images/login_logo.png" alt="Constitution of India">
+        </div>
+        <div class="constitution-info">
+            <h2>The Constitution of India</h2>
+            <p>The Constitution of India is the supreme law of India. It lays down the framework defining fundamental political principles, establishes the structure, procedures, powers, and duties of government institutions, and sets out fundamental rights, directive principles, and the duties of citizens.</p>
+            <p>It is the longest written constitution of any sovereign country in the world. Dr. B.R. Ambedkar is regarded as its chief architect. The constitution was adopted by the Constituent Assembly on 26 November 1949 and came into effect on 26 January 1950.</p>
+        </div>
+    </div>
+
+    <!-- Constitution Info Cards Section -->
+    <h1 style="text-align: center; margin-top: 50px; font-size: 50px;">Explore</h1>
+    <div class="constitution-cards">
+        <div class="info-card" onclick="openModal('card1')">
+            <h3>The Making of the Constitution</h3>
+            <p>Learn about the process of how the Indian Constitution was created.</p>
+        </div>
+        <div class="info-card" onclick="openModal('card2')">
+            <h3>When It Came Into Existence</h3>
+            <p>Discover the historical context and the date when the Constitution came into force.</p>
+        </div>
+        <div class="info-card" onclick="openModal('card3')">
+            <h3>Key Amendments</h3>
+            <p>Understand the significant amendments to the Indian Constitution over time.</p>
+        </div>
+    </div>
+
+    <!-- Featured Games Section -->
+    
+
+    <!-- Blog Section -->
+    
+
+    <!-- Modal for displaying additional information -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-content">
+            <div id="about-section" class="footer-section" >
+                <h3>About Samvidhan</h3>
+                <p>Samvidhan is an innovative educational platform dedicated to making constitutional learning engaging and accessible through interactive games and activities.</p>
+                
+                <p>Developed by a team of educators and legal experts, Samvidhan transforms complex constitutional concepts into enjoyable learning experiences.</p>
+            </div>
+            
+            <div class="footer-section contact-section">
+                <h3>Contact Us</h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span><a href="tel:+919876543210">+91 98765 43210</a></span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><a href="mailto:contact@samvidhan.com">contact@samvidhan.com</a></span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Constitution House,<br>New Delhi - 110001</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Samvidhan | Developed with ❤️ for India</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+</body>
+</html>
