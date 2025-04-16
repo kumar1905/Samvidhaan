@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constitution Quest - Learn</title>
+    
     <style>
         /* Main Styles */
         * {
@@ -229,7 +230,7 @@
             margin-top: 2rem;
         }
         
-        /* Modal */
+        /* Modal - Updated Styles */
         .modal {
             display: none;
             position: fixed;
@@ -248,9 +249,12 @@
             border-radius: 10px;
             width: 90%;
             max-width: 500px;
+            max-height: 80vh;
             padding: 2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
         .close-modal {
@@ -260,10 +264,46 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #7f8c8d;
+            transition: color 0.2s;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        .modal-header {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-header h2 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-body {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 10px 0;
+        }
+        
+        .modal-footer {
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
         }
         
         .quiz-question {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .quiz-question:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
         }
         
         .quiz-options {
@@ -437,18 +477,21 @@
         </div>
     </footer>
     
-    <!-- Quiz Modal -->
+    <!-- Quiz Modal - Updated Structure -->
     <div class="modal" id="quizModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <div class="modal-header">
-                <h2>Level ${level} Challenge</h2>
-                <p>Test your knowledge about ${getLevelTopic(level)}</p>
+                <h2 id="modalLevelTitle">Level 1 Challenge</h2>
+                <p id="modalLevelDescription">Test your knowledge about Constitution Basics</p>
             </div>
             <div class="modal-body" id="quizQuestionsContainer">
                 <!-- Quiz questions will be inserted here by JavaScript -->
             </div>
-            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Return</button>
+                <button class="btn" onclick="submitQuiz(gameState.currentLevel)">Submit</button>
+            </div>
         </div>
     </div>
     
@@ -498,7 +541,30 @@
                     explanation: "Article 32 (Right to Constitutional Remedies) was called the heart and soul of the Constitution."
                 }
             ],
-            // More questions can be added for other levels
+            3: [
+                {
+                    question: "Which article contains the Directive Principles of State Policy?",
+                    options: ["Article 36-51", "Article 14-35", "Article 52-78", "Article 79-124"],
+                    answer: 0,
+                    explanation: "Directive Principles of State Policy are contained in Part IV (Articles 36-51)."
+                }
+            ],
+            4: [
+                {
+                    question: "Which article deals with the composition of the Parliament?",
+                    options: ["Article 79", "Article 52", "Article 124", "Article 148"],
+                    answer: 0,
+                    explanation: "Article 79 deals with the composition of the Parliament."
+                }
+            ],
+            5: [
+                {
+                    question: "Which article deals with the amendment of the Constitution?",
+                    options: ["Article 368", "Article 352", "Article 370", "Article 356"],
+                    answer: 0,
+                    explanation: "Article 368 deals with the amendment procedure of the Constitution."
+                }
+            ]
         };
         
         // Initialize the page
@@ -516,41 +582,43 @@
         
         // Start a quiz for a specific level
         function startQuiz(level) {
-    const questions = quizQuestions[level];
-    if (!questions) {
-        alert("Quiz questions for this level are not available yet!");
-        return;
-    }
-    
-    let quizHTML = '';
-    
-    questions.forEach((q, qIndex) => {
-        quizHTML += `
-            <div class="quiz-question" id="question${qIndex}">
-                <h3>Question ${qIndex + 1}: ${q.question}</h3>
-                <div class="quiz-options">
-        `;
+            const questions = quizQuestions[level];
+            if (!questions) {
+                alert("Quiz questions for this level are not available yet!");
+                return;
+            }
+            
+            document.getElementById('modalLevelTitle').textContent = `Level ${level} Challenge`;
+            document.getElementById('modalLevelDescription').textContent = `Test your knowledge about ${getLevelTopic(level)}`;
+            
+            let quizHTML = '';
+            questions.forEach((q, qIndex) => {
+                quizHTML += `
+                    <div class="quiz-question" id="question${qIndex}">
+                        <h3>Question ${qIndex + 1}: ${q.question}</h3>
+                        <div class="quiz-options">
+                `;
+                
+                q.options.forEach((option, oIndex) => {
+                    quizHTML += `
+                        <div class="quiz-option" onclick="selectOption(${qIndex}, ${oIndex})">
+                            ${option}
+                        </div>
+                    `;
+                });
+                
+                quizHTML += `
+                        </div>
+                        <div class="quiz-feedback" id="feedback${qIndex}"></div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('quizQuestionsContainer').innerHTML = quizHTML;
+            document.getElementById('quizModal').style.display = "flex";
+            document.getElementById('quizQuestionsContainer').scrollTop = 0;
+        }
         
-        q.options.forEach((option, oIndex) => {
-            quizHTML += `
-                <div class="quiz-option" onclick="selectOption(${qIndex}, ${oIndex})">
-                    ${option}
-                </div>
-            `;
-        });
-        
-        quizHTML += `
-                </div>
-                <div class="quiz-feedback" id="feedback${qIndex}"></div>
-            </div>
-        `;
-    });
-    
-    document.getElementById('quizQuestionsContainer').innerHTML = quizHTML;
-    document.querySelector('.modal-header h2').textContent = `Level ${level} Challenge`;
-    document.querySelector('.modal-header p').textContent = `Test your knowledge about ${getLevelTopic(level)}`;
-    document.getElementById('quizModal').style.display = "flex";
-}
         // Get topic for a level
         function getLevelTopic(level) {
             const topics = [
@@ -661,6 +729,12 @@
         // Close modal
         function closeModal() {
             document.getElementById('quizModal').style.display = "none";
+            // Clear any selected answers when closing
+            if (quizQuestions[gameState.currentLevel]) {
+                quizQuestions[gameState.currentLevel].forEach(q => {
+                    delete q.selected;
+                });
+            }
         }
         
         // Initialize the page when loaded
