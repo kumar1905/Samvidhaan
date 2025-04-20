@@ -249,31 +249,36 @@
         });
 
         // Handle Login Form
-        document.addEventListener("DOMContentLoaded", function () {
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', async function (event) {
-                    event.preventDefault();
+document.getElementById("loginForm")?.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-                    let username = document.getElementById("loginUsername").value;
-                    let password = document.getElementById("loginPassword").value;
+    let username = document.getElementById("loginUsername").value;
+    let password = document.getElementById("loginPassword").value;
 
-                    const response = await fetch("http://localhost:5000/login", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ username, password })
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        alert(data.message);
-                        window.location.href = "./index.html"; 
-                    } else {
-                        alert(data.error);
-                    }
-                });
-            }
+    try {
+        const response = await fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
         });
+
+        const data = await response.json();
+        if (response.ok) {
+            // Save token and user data
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.userId);
+            localStorage.setItem('username', data.username);
+            
+            // Redirect to index.html
+            window.location.href = "index.html"; 
+        } else {
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong. Check the console.");
+    }
+});
     </script>
 </body>
 </html>

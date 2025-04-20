@@ -10,6 +10,58 @@
     <link rel="icon" href="logo.webp" type="image/x-icon">
     <link rel="stylesheet" href="style1.css">
     <title>Samvidhan-Games</title>
+    <style>
+        /* Add carousel styles */
+        .carousel-container {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+
+        .carousel-slide {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        .carousel-slide.active {
+            display: block;
+        }
+
+        .carousel-slide img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -20,8 +72,6 @@
         
         <ul>
             <li><a href="index.html">Home</a></li>
-          
-
         </ul>
     </nav>
 
@@ -33,11 +83,11 @@
         </div>
         <div class="carousel-section">
             <div class="carousel-container">
-                <div class="carousel-slide">
-                    <img src="./images/samlogo.jpg" alt="Image 3">
+                <div class="carousel-slide active">
+                    <img src="./images/samlogo.jpg" alt="SAMVIDHAN Logo">
                 </div>
                 <div class="carousel-slide">
-                    <img src="./images/indianconstitution.webp" alt="Image 2">
+                    <img src="./images/indianconstitution.webp" alt="Indian Constitution">
                 </div>
             </div>
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -45,6 +95,7 @@
         </div>
     </div> 
 
+    <!-- Rest of your HTML remains exactly the same -->
     <!--Card Section-->
     <h1 style="text-align: center; margin-top: 50px; font-size: 50px;">Featured Games</h1>
     <div class="card-section1">
@@ -121,10 +172,38 @@
                 <h3 class="step-title">Play the Games</h3>
                 <p class="step-description">Engage with quizzes and games to test your knowledge and earn rewards.</p>
             </div>
-            
         </div>
     </section>
 
+    <script>
+        // Carousel functionality
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("carousel-slide");
+            
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+            
+            slides[slideIndex-1].classList.add("active");
+        }
+
+        // Auto-advance slides every 5 seconds
+        setInterval(() => {
+            plusSlides(1);
+        }, 5000);
+    </script>
+    
     <script src="script.js"></script>
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 </body>

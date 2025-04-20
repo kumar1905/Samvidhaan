@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #090909;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,7 +50,7 @@
 
         .crime-info {
             margin-top: 20px;
-            display: none; /* Hidden by default */
+            display: none;
         }
 
         .crime-info p {
@@ -59,7 +59,7 @@
         }
 
         .question-container {
-            display: none; /* Hidden by default */
+            display: none;
         }
 
         .result {
@@ -77,12 +77,38 @@
         #google_translate_element {
             margin: 20px 0;
         }
+        
+        .score-container {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .bounty-container {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .score-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
     </style>
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'en',
-                includedLanguages: 'hi,bn,ta,te,ml,kn,mr', // Add the languages here
+                includedLanguages: 'hi,bn,ta,te,ml,kn,mr',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
         }
@@ -93,6 +119,16 @@
     <div class="game-container">
         <h1>Crime Detection Game</h1>
         <div id="google_translate_element"></div>
+        
+        <div class="score-display">
+            <div class="score-container">
+                Points: <span id="scoreAmount">0</span>
+            </div>
+            <div class="bounty-container">
+                Bounty: ₹<span id="bountyAmount">0</span>
+            </div>
+        </div>
+        
         <div id="questionContainer" class="question-container">
             <img id="crimeImage" src="" alt="Crime Image" class="crime-image">
             <div>
@@ -104,9 +140,6 @@
             </div>
             <div id="result" class="crime-info">
                 <p id="resultText"></p>
-            </div>
-            <div id="bounty" class="crime-info">
-                <p>Your bounty: ₹<span id="bountyAmount">0</span></p>
             </div>
             <button id="nextButton" class="btn" onclick="nextQuestion()" style="display: none;">Next</button>
         </div>
@@ -121,7 +154,7 @@
                 image: 'https://www.gamemaps.com/img/addons/l4d2/ss/gta_thomas__tommy__vercetti__hd__19174_5.jpg?1501677421',
                 crime: 'Tommy Vercetti is committing a crime. According to the Bhartiya Nyaya Sanhita (BNS), this would be categorized under BNS Section 109 (Attempt to Murder).',
                 noCrime: 'Tommy Vercetti is not committing a crime.',
-                isCorrect: true // This indicates Tommy is committing a crime
+                isCorrect: true
             },
             {
                 image: 'https://d.ibtimes.co.uk/en/full/324730/mafia-grand-theft-auto.jpg?w=1600&h=1200&l=50&t=50&q=88&f=4e3b76f91ce532169fef8a6766720e26',
@@ -139,20 +172,30 @@
                 image: 'https://i.ytimg.com/vi/xGXShv_bX70/maxresdefault.jpg',
                 crime: 'Tommy is committing a crime.',
                 noCrime: 'Tommy Vercetti is not committing a crime. Article 19(1)(b) ensures the right to peacefully assemble and hold public meetings or processions without arms.',
-                isCorrect: false // This indicates Tommy is not committing a crime
+                isCorrect: false
             }
-            // Add more questions here
         ];
     
         let currentQuestion = 0;
-        let bounty = 0; // Initialize the bounty counter
+        let bounty = 0;
+        let score = 0;
+
+        // Load saved score if it exists
+        window.onload = function() {
+            const savedScore = localStorage.getItem('crimeDetectionScore');
+            if (savedScore) {
+                score = parseInt(savedScore);
+                document.getElementById('scoreAmount').textContent = score;
+            }
+        };
     
         function startGame() {
             document.getElementById('startButtonContainer').style.display = 'none';
             document.getElementById('questionContainer').style.display = 'block';
-            document.getElementById('bounty').style.display = 'block'; // Show the bounty display
-            bounty = 0; // Reset bounty
-            document.getElementById('bountyAmount').textContent = bounty; // Display the initial bounty
+            bounty = 0;
+            score = 0;
+            document.getElementById('bountyAmount').textContent = bounty;
+            document.getElementById('scoreAmount').textContent = score;
             showQuestion(currentQuestion);
         }
     
@@ -162,7 +205,7 @@
                 document.getElementById('crimeImage').src = question.image;
                 document.getElementById('crimeInfo').style.display = 'none';
                 document.getElementById('result').style.display = 'none';
-                document.getElementById('nextButton').style.display = 'none'; // Hide the Next button initially
+                document.getElementById('nextButton').style.display = 'none';
             }
         }
     
@@ -173,22 +216,27 @@
             const result = document.getElementById('result');
             const nextButton = document.getElementById('nextButton');
             const bountyAmount = document.getElementById('bountyAmount');
+            const scoreAmount = document.getElementById('scoreAmount');
     
             if (isCrime === question.isCorrect) {
                 resultText.textContent = "You are correct!";
-                crimeInfo.textContent = question.isCorrect ? question.crime : question.noCrime;
-                result.className = 'result'; // Applies the correct styling
+                crimeInfo.innerHTML = `<p>${question.isCorrect ? question.crime : question.noCrime}</p>`;
+                result.className = 'result';
+                score += 100;
+                scoreAmount.textContent = score;
+                // Save score to localStorage
+                localStorage.setItem('crimeDetectionScore', score);
             } else {
                 resultText.textContent = "Incorrect.";
-                crimeInfo.textContent = question.isCorrect ? question.crime : question.noCrime;
-                result.className = 'incorrect'; // Applies the incorrect styling
-                bounty += 100; // Increase bounty by ₹100 for each incorrect answer
-                bountyAmount.textContent = bounty; // Update bounty display
+                crimeInfo.innerHTML = `<p>${question.isCorrect ? question.crime : question.noCrime}</p>`;
+                result.className = 'incorrect';
+                bounty += 100;
+                bountyAmount.textContent = bounty;
             }
     
-            crimeInfo.style.display = 'block'; // Show the crime information
-            result.style.display = 'block'; // Show the result
-            nextButton.style.display = 'block'; // Show the Next button
+            crimeInfo.style.display = 'block';
+            result.style.display = 'block';
+            nextButton.style.display = 'block';
         }
     
         function nextQuestion() {
@@ -201,9 +249,10 @@
         }
     
         function endGame() {
-            // Logic to end the game or display final results
-            alert(`Game over! You have to pay a fine of ₹${bounty} for your wrong answers. Be aware of crime!`);
-            // You can redirect to a different page or restart the game here
+            alert(`Game over!\n\nYour final score: ${score} points\nYour total bounty: ₹${bounty}\n\n${bounty > 0 ? 'Be aware of crime!' : 'Great job detecting crimes!'}`);
+            currentQuestion = 0;
+            document.getElementById('startButtonContainer').style.display = 'block';
+            document.getElementById('questionContainer').style.display = 'none';
         }
     </script>
 </body>

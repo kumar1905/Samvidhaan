@@ -29,6 +29,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             margin: 30px 0;
+            position: relative;
         }
 
         #quiz-video {
@@ -92,19 +93,23 @@
             transform: translateY(-2px);
         }
 
-        #language-selector {
-            margin: 20px 0;
-        }
-
         .header {
             text-align: center;
             margin-top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
         .header h1 {
             color: #e91e63;
             font-size: 2rem;
             margin-bottom: 10px;
+            flex-grow: 1;
+            text-align: center;
         }
 
         .progress-bar {
@@ -129,6 +134,37 @@
             margin: 15px 0;
             color: #4caf50;
             font-weight: bold;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .language-selector-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .feedback {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .correct {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .incorrect {
+            background-color: #f44336;
+            color: white;
         }
     </style>
     <!-- Google Translate Script -->
@@ -145,13 +181,16 @@
 </head>
 <body>
     <div class="header">
+        <div class="language-selector-container">
+            <div id="google_translate_element"></div>
+        </div>
         <h1>Kolkata Rape Case Quiz</h1>
-        <div id="google_translate_element"></div>
+        <div class="score-display" id="score-display">Score: 0</div>
     </div>
 
     <div class="quiz-container">
         <video id="quiz-video" controls>
-            <source src="./images/kolkata-case.mp4" type="video/mp4">
+            <source src="./images/kolkata.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         
@@ -159,7 +198,7 @@
             <div class="progress" id="progress-bar"></div>
         </div>
         
-        <div class="score-display" id="score-display">Score: 0/0</div>
+        <div class="feedback" id="feedback"></div>
         
         <div class="question-container">
             <p id="question-text">When did the Kolkata rape case that shocked the nation occur?</p>
@@ -234,21 +273,44 @@
         }
 
         function updateScoreDisplay() {
-            document.getElementById('score-display').textContent = `Score: ${score}/${currentQuestion}`;
+            document.getElementById('score-display').textContent = `Score: ${score}`;
+        }
+
+        function showFeedback(message, isCorrect) {
+            const feedbackElement = document.getElementById('feedback');
+            feedbackElement.textContent = message;
+            feedbackElement.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedbackElement.style.display = 'block';
         }
 
         function submitAnswer(answer) {
             const correctAnswer = questions[currentQuestion].correctAnswer;
+            const feedbackElement = document.getElementById('feedback');
+            
             if (answer === correctAnswer) {
-                alert('Correct!');
                 score++;
                 updateScoreDisplay();
+                showFeedback('Correct! Well done!', true);
             } else {
-                alert(`Wrong answer. The correct answer was ${questions[currentQuestion].options[correctAnswer.charCodeAt(0) - 65]}`);
+                const correctOption = questions[currentQuestion].options[correctAnswer.charCodeAt(0) - 65];
+                showFeedback(`Incorrect. The correct answer was: ${correctOption}`, false);
             }
+            
+            // Disable all answer buttons after submission
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(button => {
+                button.disabled = true;
+                button.style.opacity = '0.7';
+            });
+            
+            // Enable next question button
+            document.getElementById('next-question-btn').disabled = false;
         }
 
         function loadNextQuestion() {
+            // Hide feedback
+            document.getElementById('feedback').style.display = 'none';
+            
             currentQuestion++;
             updateProgressBar();
             
@@ -259,10 +321,28 @@
                 const buttons = document.querySelectorAll('.answer-btn');
                 buttons.forEach((button, index) => {
                     button.innerText = questionData.options[index];
+                    button.disabled = false;
+                    button.style.opacity = '1';
                 });
+                
+                // Disable next question button until answer is selected
+                document.getElementById('next-question-btn').disabled = true;
             } else {
-                alert(`Quiz completed! Your final score is ${score}/${questions.length}`);
-                // Optionally reset the quiz
+                // Quiz completed
+                const percentage = Math.round((score / questions.length) * 100);
+                let message;
+                
+                if (percentage >= 80) {
+                    message = `Excellent! You scored ${score}/${questions.length} (${percentage}%)`;
+                } else if (percentage >= 60) {
+                    message = `Good job! You scored ${score}/${questions.length} (${percentage}%)`;
+                } else {
+                    message = `You scored ${score}/${questions.length} (${percentage}%). Keep learning!`;
+                }
+                
+                alert(message);
+                
+                // Reset quiz
                 currentQuestion = 0;
                 score = 0;
                 updateProgressBar();
@@ -273,13 +353,20 @@
                 const buttons = document.querySelectorAll('.answer-btn');
                 buttons.forEach((button, index) => {
                     button.innerText = questionData.options[index];
+                    button.disabled = false;
+                    button.style.opacity = '1';
                 });
+                
+                // Disable next question button until answer is selected
+                document.getElementById('next-question-btn').disabled = true;
             }
         }
 
-        // Initialize progress bar
+        // Initialize
         updateProgressBar();
         updateScoreDisplay();
+        // Disable next question button until answer is selected
+        document.getElementById('next-question-btn').disabled = true;
     </script>
 </body>
 </html>
