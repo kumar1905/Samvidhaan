@@ -576,12 +576,12 @@
                 </div>
             </div>
             
-            <div class="profile-badges" style="margin-top: 30px;">
+            <!-- <div class="profile-badges" style="margin-top: 30px;">
                 <h3 style="border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">Your Achievements</h3>
                 <div id="badgesContainer" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
-                    <!-- Badges will be loaded here -->
+                    Badges will be loaded here
                 </div>
-            </div>
+            </div> -->
             
             <button class="logout-btn" onclick="logout()" style="margin-top: 30px; width: 100%; padding: 12px; background-color: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
                 <i class="fas fa-sign-out-alt"></i> Logout
@@ -1039,7 +1039,6 @@ function updateNavigation() {
                     
                     // Update profile modal
                     document.getElementById('modalUsername').textContent = data.username;
-                    document.getElementById('modalEmail').textContent = data.email;
                     document.getElementById('totalScoreStat').textContent = data.total_score || 0;
                     document.getElementById('dropdownScore').textContent = data.total_score || 0;
                     
